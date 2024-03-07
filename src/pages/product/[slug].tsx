@@ -1,8 +1,15 @@
-import { useGetProductQuery, useSetFavoriteMutation } from "@/services/product";
+import {
+  useAddBasketMutation,
+  useGetProductQuery,
+  useSetFavoriteMutation,
+  useSetRatingMutation,
+} from "@/services/product";
+import { error } from "console";
 import { Inter } from "next/font/google";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
+import { toast } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,12 +20,33 @@ const Product = () => {
     `${router.query.slug}`
   );
 
-  const [setFavorite, result] = useSetFavoriteMutation()
+  const [setFavorite, result] = useSetFavoriteMutation();
+  const [setRating, ratingResult] = useSetRatingMutation();
+  const [addBasket] = useAddBasketMutation()
 
   const handleAddFavorite = () => {
-    setFavorite({productId: data.row.id})
-  }
+    setFavorite({ productId: data.row.id });
+  };
 
+  useEffect(() => {
+    console.log(result);
+    //toast.error("Failed Login!");
+
+    if (result.isError) alert("lütfen üye olunuz");
+    if (result.isSuccess) alert("ürün favorilere eklendi");
+  }, [result]);
+
+  const handleRating = (rating: number) => {
+    console.log(rating);
+    setRating({
+      productId: data.row.id,
+      rating,
+    });
+  };
+
+  const handleAddBasket = () => {
+    addBasket({ productId: data.row.id, quantity: 1})
+  }
   return (
     <main
       className={`flex flex-col items-center justify-between p-0 ${inter.className}`}
@@ -42,62 +70,53 @@ const Product = () => {
               </h1>
               <div className="flex mb-4">
                 <span className="flex items-center">
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    className="w-4 h-4 text-red-500"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    className="w-4 h-4 text-red-500"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    className="w-4 h-4 text-red-500"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <svg
-                    fill="currentColor"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    className="w-4 h-4 text-red-500"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    className="w-4 h-4 text-red-500"
-                    viewBox="0 0 24 24"
-                  >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                  </svg>
-                  <span className="text-gray-600 ml-3">4 Reviews</span>
+                  {[1, 2, 3, 4, 5].map((v: number) => {
+                    return (
+                      <>
+                        <span
+                          key={v}
+                          role="button"
+                          onClick={() => handleRating(v)}
+                        >
+                          {isSuccess &&
+                          data.row.ratings.reduce(
+                            (total: number, o: any) =>
+                              total + parseInt(o.rating),
+                            0
+                          ) /
+                            data.row.ratings.length <
+                            v ? (
+                            <svg
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              className="w-4 h-4 text-red-500"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                          ) : (
+                            <svg
+                              fill="currentColor"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              className="w-4 h-4 text-red-500"
+                              viewBox="0 0 24 24"
+                            >
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                          )}
+                        </span>
+                      </>
+                    );
+                  })}
+                  <span className="text-gray-600 ml-3">
+                    {isSuccess && data.row.ratings.length} Reviews
+                  </span>
                 </span>
                 <span className="flex ml-3 pl-3 py-2 border-l-2 border-gray-200">
                   <a className="text-gray-500">
@@ -182,12 +201,16 @@ const Product = () => {
                     {isSuccess && data.row.price.discountPrice}
                   </span>
                 </span>
-                <button className="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
+                <button className="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded"
+                onClick={handleAddBasket}
+                >
                   Add Basket
                 </button>
-                <button 
-                className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4"
-                onClick={handleAddFavorite}
+                <button
+                  className={`rounded-full w-10 h-10 bg-gray-200 p-0 border-0 
+                  inline-flex items-center justify-center 
+                  text-${isSuccess && data.favorite ? "red" : "gray"}-500 ml-4`}
+                  onClick={handleAddFavorite}
                 >
                   <svg
                     fill="currentColor"
