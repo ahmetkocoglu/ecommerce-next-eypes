@@ -3,15 +3,18 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 
 import tokenReducer from "./app/auth/token";
 import { loginApi } from "@/services/auth";
+import { productApi } from "@/services/product";
 
 export const store = configureStore({
     reducer: {
         tokenState: tokenReducer,
-        [loginApi.reducerPath]: loginApi.reducer
+        [loginApi.reducerPath]: loginApi.reducer,
+        [productApi.reducerPath]: productApi.reducer
     },
     middleware:(getDefaultMiddleware) => 
     getDefaultMiddleware().concat(
-        loginApi.middleware
+        loginApi.middleware,
+        productApi.middleware
     )
 })
 

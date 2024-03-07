@@ -1,8 +1,8 @@
 import { setToken } from "@/store/app/auth/token"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
-export const loginApi = createApi({
-    reducerPath: 'loginApi',
+export const productApi = createApi({
+    reducerPath: 'productApi',
     baseQuery: fetchBaseQuery({
         baseUrl: "https://api.phito.xyz/api/v1",
         prepareHeaders: (headers, { getState, endpoint }) => {
@@ -15,23 +15,17 @@ export const loginApi = createApi({
         },
     }),
     endpoints:(builder) => ({
-        login: builder.mutation({
+        getProduct: builder.query<any, string>({
+            query: (url) => `/product/${url}`,
+        }),
+        setFavorite: builder.mutation({
             query: (body) => ({
-                url: '/auth/sign-in',
+                url: '/favorite',
                 method: 'POST',
                 body
             }),
-            transformResponse: (result: {token: string}) => result,
-            async onQueryStarted(_args, {dispatch, queryFulfilled}){
-                try {
-                    const {data} = await queryFulfilled
-                    dispatch(setToken(data.token))
-                } catch (error){
-
-                }
-            }
         })
     })
 })
 
-export const {useLoginMutation} = loginApi
+export const {useGetProductQuery, useSetFavoriteMutation} = productApi
