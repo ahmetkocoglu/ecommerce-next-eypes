@@ -29,11 +29,8 @@ const Product = () => {
   };
 
   useEffect(() => {
-    console.log(result);
-    //toast.error("Failed Login!");
-
-    if (result.isError) alert("lütfen üye olunuz");
-    if (result.isSuccess) alert("ürün favorilere eklendi");
+    if (result.isError) toast.error("lütfen üye olunuz");
+    if (result.isSuccess) toast.success("ürün favorilere eklendi");
   }, [result]);
 
   const handleRating = (rating: number) => {

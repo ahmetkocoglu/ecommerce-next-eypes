@@ -1,11 +1,12 @@
 import "@/styles/globals.css";
-import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { store } from "@/store";
-import { ToastContainer } from "react-toastify";
 import { Layouts } from "@/layouts/Layouts";
 import BaseLayout from "@/layouts/BaseLayout";
 import { MyAppProps } from "@/layouts/Type";
+import { AuthProvider } from "@/context/AuthContext";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function App({ Component, pageProps }: MyAppProps) {
   const Layout = Layouts[Component.Layout] || BaseLayout;
@@ -14,9 +15,11 @@ export default function App({ Component, pageProps }: MyAppProps) {
     <>
       <ToastContainer />
       <Provider store={store}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <AuthProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </AuthProvider>
       </Provider>
     </>
   );

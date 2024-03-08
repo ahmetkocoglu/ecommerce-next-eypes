@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useLoginMutation } from "@/services/auth";
+import { toast } from "react-toastify";
 
 const AuthLogin = () => {
   const [login, result] = useLoginMutation();
@@ -25,6 +26,12 @@ const AuthLogin = () => {
       login(values);
     },
   });
+
+  useEffect(() => {
+    if (result.isLoading) toast.success("lütfen bekleyiniz");
+    if (result.isSuccess) toast.success("giriş başarılı");
+  }, [result]);
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -87,15 +94,16 @@ const AuthLogin = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.password}
-               />
-               {formik.touched.password && formik.errors.password ? (
-                 <div>{formik.errors.password}</div>
-               ) : null}
+                />
+                {formik.touched.password && formik.errors.password ? (
+                  <div>{formik.errors.password}</div>
+                ) : null}
               </div>
             </div>
 
             <div>
               <button
+                disabled={result.isLoading}
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
