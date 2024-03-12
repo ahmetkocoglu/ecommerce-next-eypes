@@ -3,7 +3,7 @@ import { MyPage } from "@/layouts/Type";
 
 const Login: MyPage = () => {
 
-  return <><AuthLogin /></>
+  return <AuthLogin />
 };
 
 Login.Layout = 'Auth'

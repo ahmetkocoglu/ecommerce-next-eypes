@@ -3,9 +3,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useLoginMutation } from "@/services/auth";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 const AuthLogin = () => {
   const [login, result] = useLoginMutation();
+
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
@@ -28,8 +31,11 @@ const AuthLogin = () => {
   });
 
   useEffect(() => {
-    if (result.isLoading) toast.success("lütfen bekleyiniz");
-    if (result.isSuccess) toast.success("giriş başarılı");
+    if (result.isLoading) toast.success("lütfen bekleyiniz")
+    if (result.isSuccess) {
+      toast.success("giriş başarılı")
+      router.push('/')
+    }
   }, [result]);
 
   return (

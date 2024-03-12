@@ -1,10 +1,11 @@
+import { setBasket } from "@/store/app/auth/basket"
 import { setToken } from "@/store/app/auth/token"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 export const loginApi = createApi({
     reducerPath: 'loginApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://api.phito.xyz/api/v1",
+        baseUrl: "http://localhost:3050/api/v1",
         prepareHeaders: (headers, { getState, endpoint }) => {
             const token = localStorage.getItem('token') as string
 
@@ -14,24 +15,36 @@ export const loginApi = createApi({
             return headers
         },
     }),
-    endpoints:(builder) => ({
+    endpoints: (builder) => ({
         login: builder.mutation({
             query: (body) => ({
                 url: '/auth/sign-in',
                 method: 'POST',
                 body
             }),
-            transformResponse: (result: {token: string}) => result,
-            async onQueryStarted(_args, {dispatch, queryFulfilled}){
+            transformResponse: (result: { token: string }) => result,
+            async onQueryStarted(_args, { dispatch, queryFulfilled }) {
                 try {
-                    const {data} = await queryFulfilled
+                    const { data } = await queryFulfilled
                     dispatch(setToken(data.token))
-                } catch (error){
+                } catch (error) {
 
+                }
+            }
+        }),
+        getMe: builder.query<any, string>({
+            query: () => '/user/me',
+            transformResponse: (result: { basket: any }) => result,
+            async onQueryStarted(_args, { dispatch, queryFulfilled }) {
+                try {
+                    const { data } = await queryFulfilled;
+                    dispatch(setBasket(data.basket))
+                } catch (error) {
+                    localStorage.removeItem('token')
                 }
             }
         })
     })
 })
 
-export const {useLoginMutation} = loginApi
+export const { useLoginMutation, useGetMeQuery } = loginApi

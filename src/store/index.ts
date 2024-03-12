@@ -2,12 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 import tokenReducer from "./app/auth/token";
+import basketReducer from "./app/auth/basket";
 import { loginApi } from "@/services/auth";
 import { productApi } from "@/services/product";
 
 export const store = configureStore({
     reducer: {
         tokenState: tokenReducer,
+        basketState: basketReducer,
         [loginApi.reducerPath]: loginApi.reducer,
         [productApi.reducerPath]: productApi.reducer
     },

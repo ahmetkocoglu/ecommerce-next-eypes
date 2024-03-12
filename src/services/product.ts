@@ -1,10 +1,9 @@
-import { setToken } from "@/store/app/auth/token"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 export const productApi = createApi({
     reducerPath: 'productApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: "https://api.phito.xyz/api/v1",
+        baseUrl: "http://localhost:3050/api/v1",
         prepareHeaders: (headers, { getState, endpoint }) => {
             const token = localStorage.getItem('token') as string
 
@@ -16,7 +15,7 @@ export const productApi = createApi({
     }),
     endpoints:(builder) => ({
         getProduct: builder.query<any, string>({
-            query: (url) => `/product/${url}`,
+            query: (url) => `/product/${url}`, //'http://localhost:3050/api/v1//product/erkek-spor-beyaz-ayakkabi'
         }),
         setFavorite: builder.mutation({
             query: (body) => ({
