@@ -32,12 +32,19 @@ export const loginApi = createApi({
                 }
             }
         }),
+        register: builder.mutation({
+            query: (body) => ({
+                url: '/auth/sign-up',
+                method: 'POST',
+                body,
+            }),
+        }),
         getMe: builder.query<any, string>({
             query: () => '/user/me',
-            transformResponse: (result: { basket: any }) => result,
+            transformResponse: (result: { basket: any[] }) => result,
             async onQueryStarted(_args, { dispatch, queryFulfilled }) {
                 try {
-                    const { data } = await queryFulfilled;
+                    const { data } = await queryFulfilled;                    
                     dispatch(setBasket(data.basket))
                 } catch (error) {
                     localStorage.removeItem('token')
@@ -47,4 +54,4 @@ export const loginApi = createApi({
     })
 })
 
-export const { useLoginMutation, useGetMeQuery } = loginApi
+export const { useLoginMutation, useRegisterMutation, useGetMeQuery } = loginApi

@@ -13,7 +13,7 @@ export const productApi = createApi({
             return headers
         },
     }),
-    endpoints:(builder) => ({
+    endpoints: (builder) => ({
         getProduct: builder.query<any, string>({
             query: (url) => `/product/${url}`, //'http://localhost:3050/api/v1//product/erkek-spor-beyaz-ayakkabi'
         }),
@@ -27,9 +27,9 @@ export const productApi = createApi({
             async onQueryStarted(_args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    
+
                 } catch (error) {
-                    
+
                 }
             }
         }),
@@ -46,8 +46,21 @@ export const productApi = createApi({
                 method: 'POST',
                 body
             }),
+        }),
+        removeBasket: builder.mutation({
+            query: (body) => ({
+                url: '/movement/remove-basket',
+                method: 'POST',
+                body
+            }),
         })
     })
 })
 
-export const {useGetProductQuery, useSetFavoriteMutation, useSetRatingMutation, useAddBasketMutation} = productApi
+export const {
+    useGetProductQuery,
+    useSetFavoriteMutation,
+    useSetRatingMutation,
+    useAddBasketMutation,
+    useRemoveBasketMutation
+} = productApi

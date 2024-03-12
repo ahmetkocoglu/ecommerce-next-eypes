@@ -1,14 +1,17 @@
+import { MovementType } from '@/types/movementType';
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
-    basket: ''
+    basket: [],
+    basketCount: 0
 }
 
 export const basketSlice = createSlice({
     initialState,
     name: 'basket',
     reducers: {
-        setBasket: (state, action: PayloadAction<string>) => {
+        setBasket: (state, action: PayloadAction<any>) => {
+            console.log(action.payload);
             state.basket = action.payload
         }
     }

@@ -42,6 +42,7 @@ const Product = () => {
 
   const handleAddBasket = () => {
     addBasket({ productId: data.row.id, quantity: 1 });
+    toast.success("ürün sepete eklendi")
   };
   return (
     <main
