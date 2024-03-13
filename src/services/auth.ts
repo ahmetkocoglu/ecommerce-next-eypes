@@ -1,5 +1,7 @@
 import { setBasket } from "@/store/app/auth/basket"
 import { setToken } from "@/store/app/auth/token"
+import { setUser } from "@/store/app/auth/user"
+import { UserType } from "@/types/userType"
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"
 
 export const loginApi = createApi({
@@ -41,11 +43,12 @@ export const loginApi = createApi({
         }),
         getMe: builder.query<any, string>({
             query: () => '/user/me',
-            transformResponse: (result: { basket: any[] }) => result,
+            transformResponse: (result: { basket: any[], user: UserType }) => result,
             async onQueryStarted(_args, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;                    
                     dispatch(setBasket(data.basket))
+                    dispatch(setUser(data.user))
                 } catch (error) {
                     localStorage.removeItem('token')
                 }

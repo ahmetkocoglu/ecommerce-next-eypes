@@ -19,7 +19,7 @@ type Props = {
 };
 
 const AuthProvider = ({ children }: Props) => {
-  const {} = useGetMeQuery("");
+  //const {} = useGetMeQuery("");
   const values = {};
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
