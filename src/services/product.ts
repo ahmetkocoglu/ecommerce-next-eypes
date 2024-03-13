@@ -17,6 +17,9 @@ export const productApi = createApi({
         getProduct: builder.query<any, string>({
             query: (url) => `/product/${url}`, //'http://localhost:3050/api/v1//product/erkek-spor-beyaz-ayakkabi'
         }),
+        getProducts: builder.query<any, string>({
+            query: (url) => `${url}`,
+        }),
         setFavorite: builder.mutation({
             query: (body) => ({
                 url: '/favorite',
@@ -59,6 +62,7 @@ export const productApi = createApi({
 
 export const {
     useGetProductQuery,
+    useGetProductsQuery,
     useSetFavoriteMutation,
     useSetRatingMutation,
     useAddBasketMutation,
