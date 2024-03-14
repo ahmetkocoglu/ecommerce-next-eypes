@@ -56,6 +56,13 @@ export const productApi = createApi({
                 method: 'POST',
                 body
             }),
+        }),
+        setProduct: builder.mutation({
+            query: (body) => ({
+                url: '/product/detail',
+                method: 'PUT',
+                body
+            }),
         })
     })
 })
@@ -66,5 +73,6 @@ export const {
     useSetFavoriteMutation,
     useSetRatingMutation,
     useAddBasketMutation,
-    useRemoveBasketMutation
+    useRemoveBasketMutation,
+    useSetProductMutation
 } = productApi

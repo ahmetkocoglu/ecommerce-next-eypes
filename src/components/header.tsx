@@ -1,4 +1,5 @@
 import { useGetMeQuery } from "@/services/auth";
+import { useGetMenusQuery } from "@/services/menu";
 import { RootState } from "@/store";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,7 +7,8 @@ import React, { use } from "react";
 import { useSelector } from "react-redux";
 
 const Header = () => {
-  const {data, isSuccess, isError} = useGetMeQuery("");
+  const { data, isSuccess, isError } = useGetMeQuery("");
+  const { data: menu, isSuccess: menuIsSuccess } = useGetMenusQuery("menu");
 
   return (
     <>
@@ -33,7 +35,11 @@ const Header = () => {
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li>
+               {menuIsSuccess &&
+              menu.list?.map((k: any, index: number) => {
+                return <li key={index}><Link href={k.seo}>{k.title}</Link></li>;
+              })}
+              {/* <li>
                 <a>Item 1</a>
               </li>
               <li>
@@ -49,14 +55,18 @@ const Header = () => {
               </li>
               <li>
                 <a>Item 3</a>
-              </li>
+              </li> */}
             </ul>
           </div>
           <a className="btn btn-ghost text-xl">daisyUI</a>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-            <li>
+            {menuIsSuccess &&
+              menu.list?.map((k: any, index: number) => {
+                return <li key={index}><Link href={k.seo}>{k.title}</Link></li>;
+              })}
+            {/* <li>
               <a>Item 1</a>
             </li>
             <li>
@@ -74,7 +84,7 @@ const Header = () => {
             </li>
             <li>
               <a>Item 3</a>
-            </li>
+            </li> */}
           </ul>
         </div>
         <div className="navbar-end">
@@ -99,7 +109,9 @@ const Header = () => {
                     d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                   />
                 </svg>
-                <span className="badge badge-sm indicator-item">{isSuccess && data.basket.length}</span>
+                <span className="badge badge-sm indicator-item">
+                  {isSuccess && data.basket.length}
+                </span>
               </div>
             </div>
             <div
@@ -107,8 +119,18 @@ const Header = () => {
               className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow"
             >
               <div className="card-body">
-                <span className="font-bold text-lg">{isSuccess && data.basket.length} Items</span>
-                <span className="text-info">Subtotal: {isSuccess && data.basket.reduce((total: number, item: any) => total + parseInt(item.total), 0)}</span>
+                <span className="font-bold text-lg">
+                  {isSuccess && data.basket.length} Items
+                </span>
+                <span className="text-info">
+                  Subtotal:{" "}
+                  {isSuccess &&
+                    data.basket.reduce(
+                      (total: number, item: any) =>
+                        total + parseInt(item.total),
+                      0
+                    )}
+                </span>
                 <div className="card-actions">
                   <button className="btn btn-primary btn-block">
                     View cart
@@ -142,7 +164,9 @@ const Header = () => {
               <li>
                 <Link href="/my-basket" className="justify-between">
                   My Basket
-                  <span className="badge">{isSuccess && data.basket.length}</span>
+                  <span className="badge">
+                    {isSuccess && data.basket.length}
+                  </span>
                 </Link>
               </li>
               <li>

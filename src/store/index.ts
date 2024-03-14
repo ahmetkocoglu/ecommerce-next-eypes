@@ -7,6 +7,8 @@ import userReducer from "@/store/app/auth/user";
 
 import { loginApi } from "@/services/auth";
 import { productApi } from "@/services/product";
+import { menuApi } from "@/services/menu";
+import { categoryApi } from "@/services/category";
 
 export const store = configureStore({
     reducer: {
@@ -14,12 +16,16 @@ export const store = configureStore({
         basketState: basketReducer,
         userState: userReducer,
         [loginApi.reducerPath]: loginApi.reducer,
-        [productApi.reducerPath]: productApi.reducer
+        [productApi.reducerPath]: productApi.reducer,
+        [menuApi.reducerPath]: menuApi.reducer,
+        [categoryApi.reducerPath]: categoryApi.reducer
     },
     middleware:(getDefaultMiddleware) => 
     getDefaultMiddleware().concat(
         loginApi.middleware,
-        productApi.middleware
+        productApi.middleware,
+        menuApi.middleware,
+        categoryApi.middleware
     )
 })
 
